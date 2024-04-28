@@ -1,0 +1,11 @@
+/* Add any additional style as necessary*/
+  
+.modal-body {
+    display: flex;
+  }
+  
+
+
+  .modal-footer{
+    display:block;
+  }
