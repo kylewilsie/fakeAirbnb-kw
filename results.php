@@ -1,3 +1,13 @@
+<?php
+    include("src/functions.php");
+    $guests = $_GET['guests'];
+    $roomType = $_GET['roomType'];
+    $neighborhood = $_GET['neighborhood'];
+
+    $db = dbConnect();
+    $listings = getListings($db, $guests, $neighborhood, $roomType);
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -44,36 +54,48 @@
 
         <div class="container">
 
-            <h1>Some Text</h1>
+            <h1>Results (<?php echo count($listings)?>)</h1>
 
-
+            <?php
+                $neighborhood = $_GET['neighborhood'];
+                $roomType = $_GET['roomType'];
+                $guests = $_GET['guests'];
+                echo "
+                <p><strong>Neighborhood: </strong>$neighborhood</p>
+                <p><strong>Room Type: </strong>$roomType</p>
+                <p><strong>Accommodates: </strong>$guests or more</p>";
+                if (empty($listings)) {
+                    echo "<h3>Sorry, no results - <a href='index.php' class='text-primary text-decoration-underline'>search again</a></h3>";
+                }
+                ?>
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+<?php foreach ($listings as $listing): ?>
+    <div class="col">
+        <div class="card shadow-sm">
+            <img src=<?php echo($listing['pictureURL']);?>>
 
-<div class="col">
-    <div class="card shadow-sm">
-        <img src="https://a0.muscache.com/pictures/miso/Hosting-595680673819411804/original/a6e6fda5-2935-4e2e-ba34-2fc50bba5cf3.jpeg">
+            <div class="card-body">
+                <h5 class="card-title"><?php echo($listing['neighborhood']);?></h5>
+                <p class="card-text"><?php echo($listing['name']);?><br><?php echo($listing['type']);?></p>
+                <p class="card-text">Accommodates <?php echo($listing['accommodates']);?></p>
 
-        <div class="card-body">
-            <h5 class="card-title">Kerns</h5>
-            <p class="card-text">1922 Craftsman Compound in Laurelhurst ~ Sleeps 12<br>Entire home/apt</p>
-            <p class="card-text">Accommodates 16</p>
+                <p class="card-text align-bottom">
+                <i class="bi bi-star-fill"></i> <?php echo($listing['rating']);?>
+                </p>
 
-            <p class="card-text align-bottom">
-            <i class="bi bi-star-fill"></i><span class=""> 5.00</span>
-            </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <button type="button" id="<?php echo($listing['id']);?>" class="btn btn-sm btn-outline-secondary viewListing" data-bs-toggle="modal" data-bs-target="#fakeAirbnbnModal">View</button>
+        
+                    </div>
+                    <small class="text-muted">$<?php echo($listing['price']);?></small>
 
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                    <button type="button" id="3301" class="btn btn-sm btn-outline-secondary viewListing" data-bs-toggle="modal" data-bs-target="#fakeAirbnbnModal">View</button>
-    
                 </div>
-                <small class="text-muted">$960.00</small>
-
             </div>
-        </div>
-    </div><!--.card-->
-</div><!--.col-->
+        </div><!--.card-->
+    </div><!--.col-->
+<?php endforeach; ?>
 
 
 
@@ -97,14 +119,14 @@
       <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title">Private Rooftop Flat~ 14 Guests ~ 94 WalkScore</h5>
+                    <h5 class="modal-title" id="modal-title"></h5>
                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="modal-image">
-                    <img src="https://a0.muscache.com/pictures/miso/Hosting-816145492959772426/original/0dc00636-64de-4101-a65e-0ea83b974d83.jpeg" class="img-fluid">
+                    <img src="" class="img-fluid">
                 </div>
                 <div class="modal-footer">
-                    <p>Hosford-Abernethy</p><p>$731.00 / night</p><p>Accommodates 14</p><p><i class="bi bi-star-fill"></i> 5.00</p><p>Hosted by Bob</p><p>Amenities: Air conditioning, Bathtub, Bed linens, Body soap, Carbon monoxide alarm, Cleaning products, Clothing storage, Coffee, Coffee maker: Keurig coffee machine, Conditioner, Cooking basics, Dedicated workspace, Dishes and silverware, Dishwasher, Dryer, Essentials, Fire extinguisher, First aid kit, Free street parking, Freezer, Hair dryer, Hangers, Heating, Hot water, Hot water kettle, Iron, Kitchen, Laundromat nearby, Long term stays allowed, Luggage dropoff allowed, Microwave, Outdoor dining area, Outdoor furniture, Oven, Pack ’n play/Travel crib, Private entrance, Private patio or balcony, Refrigerator, Room-darkening shades, Self check-in, Shampoo, Shower gel, Smart lock, Smoke alarm, Stove, TV, Toaster, Washer, Wifi, Wine glasses</p><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <p></p><p></p><p></p><p></p><p></p><p></p><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
